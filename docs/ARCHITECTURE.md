@@ -1,54 +1,44 @@
-# Rump template
+# Rump: one composition, three outputs
 
-This is a static placeholder demo. No backend, credentials, real APIs, or accounts.
+`docs/GOAL.md` is the pitch specification. All accounts and actions are fictional demo data.
 
-## Content and design
+## Content and timing
 
-`src/config/content.ts` owns copy, data, slide and step definitions, and demo timing.
-Edit config, not components. Layout dimensions and motion geometry are implementation details.
-`src/config/theme.ts` mirrors CSS tokens for charts. `globals.css` maps them into Tailwind.
-`/styleguide` renders all primitives, status variants, and token swatches.
+`src/config/content.ts` owns the spoken script, product copy, master numbers, and beat sheets.
+`src/lib/timeline.ts` derives segment starts, durations, and presenter beats from script lines marked `beat: true`.
+Savings are computed from the nine opportunities. Recommendations and donation suggestions are excluded.
 
-## Engine
+## Rendering
 
-`useDemo` is a reducer with deck, demo, and wrapped modes.
-`DemoPlayer` owns it across the entire run. URL changes use `history.replaceState`.
-`next()` reveals deck bullets, advances internal step beats, then advances screens.
-`subPhase` starts at zero. Optional `Step.beats` includes the initial beat.
-Steps receive `advanceSub()` and should derive internal beat UI from `subPhase`.
-The global previous key backs through beats before returning to previous screens.
-A shared `product-frame` Motion layout animates the doorway preview into the demo.
-Reduced-motion preferences disable spatial animation and reveal animated text immediately.
+`src/remotion/Root.tsx` registers `RumpPitch` (90 seconds), `RumpDemo` (63 seconds), and `Segment`.
+Each segment is registered in `src/remotion/segments/registry.ts`. Steps wrap `shell/AppShell` and use the frame-driven primitives in `ui/index.tsx`.
+Animations use Remotion frames, interpolation, and springs. There are no timers, network APIs, or CSS animations in compositions.
+The original browser-driven examples and `/styleguide` remain available as component references, outside the pitch.
 
-## Add a step
+## Presentation
 
-1. Add a typed entry to `steps` in content.ts.
-2. Create `src/components/steps/<Name>.tsx` using `_examples/ExampleStep.tsx`.
-3. Register it in `registry.ts`. Unregistered steps render `PlaceholderStep`.
-4. Add strictly increasing script lines for its screen ID.
+`/present` embeds the composition in a client-only Remotion Player. `/deck`, `/demo`, and `/wrapped` redirect with query parameters preserved.
+`/player` adds controls, a frame counter, and segment navigation. `?from=step-library` previews the optional library segment.
 
-Every autoplay action button needs `data-demo-action="unique-id"`.
-A script line may specify `autoClick` plus `clickDelay` in seconds.
-The reference action is `example-click`; add a script line for `example` to rehearse it.
-The example is excluded from normal navigation and opens at `/demo?step=example`.
-`wrapped` is the reserved terminal screen ID accepted by the config sanity checker.
-Savings totals are derived through `totalSavings()`, never hand-entered.
+- Right / Space: play to the next segment beat and pause.
+- Left: previous beat. R: reset and pause. A: toggle continuous autoplay.
+- U: architecture overlay. C: verbatim captions. P: presenter notes. F: fullscreen.
+- `?autoplay=1&hood=1&captions=1` enables those options on load.
 
-## Playback
+The presenter overlay lives outside the composition and never appears in video exports.
+The product cursor is animated; its apparent clicks drive no real account actions.
 
-`?autoplay=1` runs the script against a single master clock.
-`?step=<id>` jumps to a step on load. Reset returns to slide one and stops autoplay.
-Toggling autoplay restarts the current screen's script cue; pending clicks are cancelled.
-Arrow right or Space: next. Arrow left: previous. R: reset. A: autoplay.
-U: architecture sheet. P: presenter. Keys 1 through 9 jump to configured steps.
-Keyboard shortcuts ignore text inputs. Escape closes dialogs and sheets.
-The presenter displays the current cue, next clock cue, elapsed time, and lateness.
+## Verify and export
 
-## Verification and recording
+Run `bun run check:content`, `bun run typecheck`, `bun run lint`, and `bun run build`.
+`check:content` verifies the script against GOAL.md word for word and reports pace warnings without changing it.
+Start `bun run dev`, then `bun run verify:browser` for full autoplay and keyboard/overlay checks.
 
-Run `npm run lint`, `npm run typecheck`, and `npm run build`.
-Start `npm run dev`; inspect `/styleguide` and `/demo?step=example`.
-Run `npm run verify:browser` with the dev server running for browser checks and screenshots.
-For the backup video, open `/deck?autoplay=1` at 1920x1080 and screen record.
-The placeholder script finishes at 26 seconds. Replace its timings with the final spec.
-Screenshots are written to `screenshots/`; do not confuse placeholder QA with final content.
+- `bun run render:pitch`: `out/rump-pitch.mp4`
+- `bun run render:demo`: `out/rump-demo.mp4`
+- `bun run render:draft`: half-resolution rehearsal video
+- `bun run render:slides`: three backup PNGs in `out/slides/`
+- `bun run studio`: Remotion Studio
+
+If the headless browser download is unavailable, append `--browser-executable="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"` to render commands.
+The exports are silent by design: presenters deliver the exact script live.
