@@ -1,0 +1,14 @@
+{
+  "passed": true,
+  "consoleIssues": [],
+  "checks": [
+    "90-second full autoplay",
+    "end card",
+    "beat playback",
+    "previous and reset",
+    "hood and captions",
+    "presenter",
+    "studio seeking",
+    "1440px layout"
+  ]
+}

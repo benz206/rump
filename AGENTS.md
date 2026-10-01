@@ -7,7 +7,7 @@
 5. Every button autoplay clicks gets a `data-demo-action`.
 6. Use only design tokens. Lime (`--accent`) only for savings, primary CTA and highlight marks.
 7. No real logos, letter-mark `Avatar`s only. No em dashes.
-8. Done means: `npm run build`, `npm run lint`, `npm run typecheck` pass, the dev sanity check logs no warnings, and `/deck?autoplay=1` plays slide 1 through the Wrapped end card with no manual input.
+8. Done means: `bun run build`, `bun run lint`, `bun run typecheck` pass, the dev sanity check logs no warnings, and `/deck?autoplay=1` plays slide 1 through the Wrapped end card with no manual input.
 
 ## Working practices
 
