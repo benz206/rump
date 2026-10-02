@@ -1,26 +1,38 @@
 import { useCurrentFrame } from 'remotion';
-import { beats, opportunities, pitch, steps } from '@/config/content';
+import { beats, opportunities, pitch, screenUpdates, steps } from '@/config/content';
 import { sec } from '@/lib/timeline';
 import { AppShell } from '../../shell/AppShell';
-import { Avatar, Button, Counter, Cursor, Fade, Heading, Pill, Skeleton, Typewriter, clamp, label, panel } from '../../ui';
+import { Counter, Cursor, Pill, Skeleton, TypingDots, clamp, label, panel } from '../../ui';
 
 export function Flight({ showCursor = true }: { showCursor?: boolean }) {
   const frame = useCurrentFrame();
   const content = pitch.flight;
+  const copy = screenUpdates.flight;
   const timing = beats.flight;
   const step = steps.find(item => item.id === 'step-flight')!;
   const saving = opportunities.find(item => item.id === 'flight')!;
-  const lift = clamp(frame, sec(timing.lift), sec(timing.lift + beats.enter));
+  const drafted = frame >= sec(timing.status);
+  const drafting = frame >= sec(timing.type);
   return <AppShell nav={step.nav}>
-    <Heading title={content.title} eyebrow={saving.agent} />
-    <div style={{ display: 'grid', gridTemplateColumns: '620px 1fr', gap: 30 }}>
-      <div>
-        <div style={{ ...panel, padding: 32, minHeight: 230, transform: `translateY(${-8 * lift}px)` }}><div style={{ ...label, marginBottom: 24 }}>{content.emailLabel}</div>{frame < sec(timing.email) ? <><Skeleton height={26} /><div style={{ marginTop: 14 }}><Skeleton height={54} /></div></> : <Fade at={timing.email}><div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 20 }}><Avatar name={saving.merchant} color={saving.avatarColor} /><span style={{ fontSize: 21 }}>{saving.merchant}</span><span style={{ color: 'var(--muted)', marginLeft: 'auto', fontSize: 17 }}>{content.booking}</span></div><p style={{ fontSize: 27, lineHeight: 1.3, marginBottom: 0 }}>{content.email}</p></Fade>}</div>
-        <Fade at={timing.rules} duration={timing.rulesEnd - timing.rules} style={{ ...panel, padding: 32, marginTop: 22 }}><div style={{ ...label, marginBottom: 18 }}>{content.ruleLabel}</div><div style={{ fontSize: 25, lineHeight: 1.45, marginBottom: 25 }}>{content.rules}</div><div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}><Pill positive>{pitch.labels.ready}</Pill><Button action="draft-claim">{content.cta}</Button></div></Fade>
-        <Fade at={timing.status} style={{ background: 'var(--accent)', borderRadius: 12, padding: '24px 32px', marginTop: 22, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}><span style={{ fontSize: 65, fontWeight: 500, letterSpacing: '-0.05em' }}><Counter value={saving.annualSavings} at={timing.status} duration={timing.countEnd - timing.status} prefix="$" /></span><span style={{ fontSize: 18 }}>{pitch.labels.savings}</span></Fade>
-      </div>
-      <div style={{ ...panel, minHeight: 660, padding: 40, display: 'flex', flexDirection: 'column' }}><div style={{ ...label, paddingBottom: 26, borderBottom: '1px solid var(--line)' }}>{content.claimLabel}</div><div style={{ flex: 1, paddingTop: 32, fontSize: 23, lineHeight: 1.6 }}>{frame < sec(timing.type) ? <div style={{ display: 'grid', gap: 20 }}><Skeleton width="55%" /><Skeleton /><Skeleton /><Skeleton width="80%" /><Skeleton /><Skeleton width="65%" /></div> : <Typewriter text={content.letter} at={timing.type} end={timing.typeEnd} />}</div><Fade at={timing.status} style={{ paddingTop: 24, borderTop: '1px solid var(--line)', display: 'flex', alignItems: 'center', gap: 12 }}><span style={{ color: 'var(--positive)', fontSize: 24 }}>✓</span><span style={{ fontSize: 20 }}>{content.status}</span></Fade></div>
+    <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:26}}>
+      <div><h1 style={{fontSize:32,fontWeight:600,letterSpacing:'-0.03em',margin:'0 0 10px'}}>{copy.title}</h1><p style={{fontSize:19,color:'var(--muted)',margin:0}}>{copy.subtitle}</p></div>
+      <button data-demo-action="draft-claim" style={{background:'var(--ink)',color:'var(--surface)',border:0,borderRadius:9,padding:'16px 24px',fontSize:19,fontWeight:600}}>{content.cta}</button>
     </div>
-    {showCursor && <Cursor x={555} y={655} at={timing.click} />}
+    <div style={{display:'flex',gap:22,alignItems:'center',borderBottom:'1px solid var(--line)',paddingBottom:18,marginBottom:24}}><strong style={{fontSize:18}}>{copy.tab}</strong><Pill>{copy.source}</Pill></div>
+    <div style={{display:'grid',gridTemplateColumns:'560px 1fr',gap:24}}>
+      <div style={{display:'grid',gap:18}}>
+        <div style={{...panel,padding:26,height:174}}><div style={{...label,marginBottom:18}}>{content.emailLabel}</div>{frame<sec(timing.email)?<div style={{display:'grid',gap:14}}><Skeleton/><Skeleton width="80%"/></div>:<><strong style={{fontSize:21}}>{saving.merchant}</strong><p style={{fontSize:20,lineHeight:1.45,marginTop:12}}>{content.email}</p></>}</div>
+        <div style={{...panel,padding:26,height:154}}><div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}><strong style={{fontSize:24}}>{copy.flight}</strong><span style={{background:'var(--amber-soft)',color:'var(--amber)',padding:'7px 12px',borderRadius:20,fontSize:16}}>{copy.delay}</span></div><div style={{fontSize:25,marginTop:15}}>{copy.route}</div><div style={{fontSize:16,color:'var(--muted)',marginTop:10}}>{copy.date} · {content.booking}</div></div>
+        <div style={{...panel,padding:26,height:270}}><div style={{...label,marginBottom:18}}>{content.ruleLabel}</div>{frame<sec(timing.rules)?<div style={{display:'grid',gap:16}}><Skeleton/><Skeleton/><Skeleton width="75%"/></div>:<><div style={{display:'grid',gap:14}}>{copy.rules.map(rule=><div key={rule} style={{fontSize:19}}><span style={{color:'var(--positive)',marginRight:12}}>✓</span>{rule}</div>)}</div><p style={{fontSize:15,color:'var(--muted)',margin:'20px 0 0'}}>{copy.assumption}</p></>}</div>
+      </div>
+      <div style={{...panel,padding:30,height:634,display:'flex',flexDirection:'column'}}>
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',paddingBottom:22,borderBottom:'1px solid var(--line)'}}><strong style={{fontSize:23}}>{copy.request}</strong><Pill positive={drafted}>{drafted?content.status:drafting?copy.drafting:copy.awaiting}</Pill></div>
+        <div style={{fontSize:17,color:'var(--muted)',padding:'20px 0'}}>{copy.to}</div>
+        <div style={{flex:1,fontSize:20,lineHeight:1.55}}>{!drafting?<div style={{display:'flex',alignItems:'center',gap:10,color:'var(--muted)'}}>{copy.gathering}<TypingDots/></div>:<><span style={{whiteSpace:'pre-wrap'}}>{content.letter.slice(0,Math.floor(content.letter.length*clamp(frame,sec(timing.type),sec(timing.typeEnd))))}</span>{!drafted&&<span style={{opacity:Math.floor(frame/copy.caretEvery)%2}}>▌</span>}</>}</div>
+        <div style={{borderTop:'1px solid var(--line)',paddingTop:20,display:'flex',alignItems:'center',justifyContent:'space-between'}}><div><div style={{...label,fontSize:12}}>{copy.eligible}</div><div style={{fontSize:48,fontWeight:600,letterSpacing:'-0.04em',marginTop:6}}><Counter value={saving.annualSavings} at={timing.status} duration={timing.countEnd-timing.status} prefix="$"/></div></div><div style={{textAlign:'right'}}><div style={{fontSize:18}}>{copy.approval}</div><div style={{fontSize:13,color:'var(--muted)',marginTop:10}}>{copy.audit}</div></div></div>
+      </div>
+    </div>
+    <div style={{fontSize:16,color:drafted?'var(--positive)':'var(--muted)',marginTop:20,opacity:drafted?1:0}}>{copy.end}</div>
+    {showCursor&&<div style={{'--accent':'var(--ink)'} as React.CSSProperties}><Cursor x={1480} y={66} at={timing.click}/></div>}
   </AppShell>;
 }

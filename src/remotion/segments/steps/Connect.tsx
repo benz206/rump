@@ -1,8 +1,8 @@
-import { useCurrentFrame } from 'remotion';
-import { beats, pitch, steps } from '@/config/content';
+import { Img, staticFile, useCurrentFrame } from 'remotion';
+import { beats, pitch, screenUpdates, steps } from '@/config/content';
 import { sec } from '@/lib/timeline';
 import { AppShell } from '../../shell/AppShell';
-import { Avatar, Button, Cursor, Heading, Pill } from '../../ui';
+import { Button, Cursor, Heading, Pill } from '../../ui';
 
 export function Connect({showCursor=true}:{showCursor?:boolean}) {
   const frame=useCurrentFrame();
@@ -19,7 +19,7 @@ export function Connect({showCursor=true}:{showCursor?:boolean}) {
         const running=frame>=start&&!done;
         return <div key={source.name} style={{height:188,padding:'28px 30px',border:'1px solid var(--line)',borderRadius:12,background:'var(--surface)'}}>
           <div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}>
-            <div style={{display:'flex',alignItems:'center',gap:15}}><Avatar name={source.name}/><span style={{fontSize:24,fontWeight:500}}>{source.name}</span></div>
+            <div style={{display:'flex',alignItems:'center',gap:15}}><Img src={staticFile(`icons/${screenUpdates.sourceIcons[i]}`)} style={{width:48,height:48,objectFit:'contain',borderRadius:10}}/><span style={{fontSize:24,fontWeight:500}}>{source.name}</span></div>
             {done?<span style={{color:'var(--positive)',fontSize:27}}>✓</span>:running?<span style={{width:24,height:24,border:'2px solid var(--line)',borderTopColor:'var(--ink)',borderRadius:'50%',transform:`rotate(${frame*24}deg)`}}/>:<span style={{color:'var(--muted)',fontSize:22}}>+</span>}
           </div>
           <div style={{marginTop:30,fontSize:19,color:done?'var(--ink)':'var(--muted)'}}>{done?source.stat:running?pitch.labels.connecting:pitch.labels.connectSingle}</div>

@@ -41,4 +41,14 @@ Start `bun run dev`, then `bun run verify:browser` for full autoplay and keyboar
 - `bun run studio`: Remotion Studio
 
 If the headless browser download is unavailable, append `--browser-executable="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"` to render commands.
-The exports are silent by design: presenters deliver the exact script live.
+The exports include Jessica narration from ElevenLabs. `public/audio/jessica-source.mp3` is the supplied recording; `bun scripts/align-narration.ts` rebuilds the aligned WAV from the cue windows in `content.ts`, preserving pitch when a line needs to fit a shorter window. Both compositions use the same track, with the demo cut starting at 27 seconds. Browser autoplay starts muted; **Play with narration** restarts the selected segment, enables sound, and plays continuously. The button stays outside video exports.
+
+## One-minute narrated cut
+
+`/demo/60` plays the separate `Rump60` composition. Click **Play 60-second demo with narration** to enable audio; `?autoplay=1` starts muted for browser autoplay compatibility, and `?captions=1` shows the shortened script.
+
+The product starts at 6 seconds. The original scene animations are retimed to the new windows, while `shortDemo` in `src/config/content.ts` owns the scene boundaries, narration edits, and captions. The existing Jessica recording is cut at phrase pauses and adjusted without changing pitch. No additional voice API call is required.
+
+- `bun run audio:60`: regenerate `public/audio/jessica-60.wav` with ffmpeg.
+- `bun run render:60`: export `out/rump-60.mp4` with synchronized narration.
+- `node scripts/verify-short-demo.mjs`: check full playback, audio, captions, and the final card.

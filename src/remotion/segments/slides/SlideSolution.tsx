@@ -1,5 +1,5 @@
 import { AbsoluteFill, Freeze, interpolate, spring, useCurrentFrame, useVideoConfig } from 'remotion';
-import { beats, brand, pitch, totalSavings } from '@/config/content';
+import { beats, brand, pitch, screenUpdates, totalSavings } from '@/config/content';
 import { getSegment, sec } from '@/lib/timeline';
 import { clamp, Fade, label, money } from '../../ui';
 import { SlideProblem } from './SlideProblem';
@@ -16,10 +16,10 @@ export function SlideSolution() {
     <AbsoluteFill style={{ opacity: entrance, padding: '58px 88px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}><span style={{ fontSize: 30, fontWeight: 650, letterSpacing: '-0.06em' }}>{brand.name}.</span><span style={label}>{pitch.label}</span></div>
       <Fade><h1 style={{ fontSize: 106, lineHeight: 1, letterSpacing: '-0.06em', fontWeight: 500, margin: '44px 0 22px' }}>{pitch.solution}</h1><p style={{ fontSize: 30, color: 'var(--muted)', maxWidth: 900, lineHeight: 1.25 }}>{pitch.subhead}</p></Fade>
-      <div style={{ position: 'absolute', top: 358, left: 88, width: 1030, display: 'grid', gap: 25 }}>
-        {pitch.bullets.map((bullet, i) => <Fade key={bullet.title} at={bullet.at} style={{ display: 'flex', gap: 22 }}>
-          <div style={{ border: '1px solid var(--line)', borderRadius: '50%', width: 38, height: 38, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 15, color: 'var(--muted)', marginTop: 3 }}>{String(i + 1).padStart(2, '0')}</div>
-          <div><div style={{ fontSize: 30, fontWeight: 550, letterSpacing: '-0.02em' }}>{bullet.title}</div><p style={{ fontSize: 21, lineHeight: 1.35, color: 'var(--muted)', margin: '6px 0 0', maxWidth: 850 }}>{bullet.body}</p></div>
+      <div style={{ position: 'absolute', top: 365, left: 88, width: 1030, display: 'grid', gap: 24 }}>
+        {screenUpdates.solution.map((bullet, i) => <Fade key={bullet.title} at={pitch.bullets[i].at} style={{ display: 'flex', gap: 24, padding:'24px 28px', border:'1px solid var(--line)',borderRadius:16,background:'var(--surface)' }}>
+          <div style={{ border: '1px solid var(--line)', borderRadius: '50%', width: 58, height: 58, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, fontWeight:600, color: 'var(--surface)', background:'var(--ink)', marginTop: 3 }}>{String(i + 1).padStart(2, '0')}</div>
+          <div><div style={{ fontSize: 36, fontWeight: 550, letterSpacing: '-0.02em' }}>{bullet.title}</div><p style={{ fontSize: 23, lineHeight: 1.35, color: 'var(--muted)', margin: '6px 0 0', maxWidth: 850 }}>{bullet.body}</p></div>
         </Fade>)}
       </div>
       <div style={{ position: 'absolute', bottom: 45, left: 88, right: 88, borderTop: '1px solid var(--line)', paddingTop: 22, display: 'flex', justifyContent: 'space-between', fontSize: 18, color: 'var(--muted)' }}><span>{brand.tagline}</span><span>{pitch.labels.secure}</span></div>

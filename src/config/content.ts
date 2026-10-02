@@ -476,6 +476,28 @@ export const nextLine = (atSeconds: number) =>
 
 // Single source of truth for the deterministic pitch and exports.
 export const video = { fps: 30, width: 1920, height: 1080, seconds: 90, demoStart: 27 };
+export const narration = {
+  source: 'audio/jessica-source.mp3',
+  file: 'audio/jessica-aligned.wav',
+  play: 'Play with narration',
+  // Source cuts fall in pauses. Target windows follow the existing scene beats.
+  cues: [
+    {start:0,end:2.96,at:0,until:5},
+    {start:2.96,end:15.18,at:5,until:15},
+    {start:15.18,end:31.06,at:15,until:27},
+    {start:31.06,end:32.30,at:27,until:28},
+    {start:32.30,end:38.32,at:28,until:33},
+    {start:38.32,end:44.27,at:33,until:40},
+    {start:44.27,end:50.18,at:40,until:46},
+    {start:50.18,end:56.08,at:46,until:55.6},
+    {start:56.08,end:58.52,at:55.6,until:58},
+    {start:58.52,end:64.67,at:58,until:65},
+    {start:64.67,end:71.58,at:65,until:73},
+    {start:71.58,end:78.37,at:73,until:80},
+    {start:78.37,end:82.13,at:80,until:87},
+    {start:82.13,end:85.159,at:87,until:90},
+  ],
+};
 export const cashFlow = { monthly: 4860, fixed: 3410, subscriptions: 412, fees: 186, optional: 852, year: 2026, coreShare: 70 };
 export const pitch = {
   label: 'PERSONAL FINANCE, ON YOUR SIDE',
@@ -548,4 +570,52 @@ export const beats = {
   flight:{email:0.8,lift:1,rules:1.8,rulesEnd:2.6,click:3,type:3.2,typeEnd:5.6,status:5.8,countEnd:6.6},
   rapid:{chips:0.5,click:0.8,start:0.9,stagger:0.55,flip:0.4},
   wrapped:{cards:[0,1.4,2.8,4.2,5.6,7]},library:3,
+};
+
+
+// A separate one-minute edit. Existing pitch copy and timing stay intact.
+export const shortDemo = {
+  seconds: 60,
+  file: 'audio/jessica-60.wav',
+  title: 'Rump · 60-second demo',
+  play: 'Play 60-second demo with narration',
+  scenes: [
+    {id:'slide-problem', at:0, until:3},
+    {id:'slide-solution', at:3, until:5},
+    {id:'slide-doorway', at:5, until:6},
+    {id:'step-connect', at:6, until:10},
+    {id:'step-scan', at:10, until:15},
+    {id:'step-dashboard', at:15, until:20},
+    {id:'step-rogers', at:20, until:30},
+    {id:'step-notion', at:30, until:36},
+    {id:'step-flight', at:36, until:43},
+    {id:'step-rapidfire', at:43, until:50},
+    {id:'wrapped', at:50, until:60},
+  ],
+  cues: [
+    {start:0,end:2.96,at:0,until:3,line:'Quick question. How much do you spend every month?'},
+    {start:15.18,end:16.27,at:3,until:5,line:'Meet Rump.'},
+    {start:31.06,end:32.30,at:5,until:6,line:"Let's find your money."},
+    ...narration.cues.slice(4,7).map((cue,i)=>({...cue,at:[6,10,15][i],until:[10,15,20][i],line:script[i+4].line})),
+    {...narration.cues[7],at:20,until:28,line:'Rogers charges you ninety-five a month. New customers pay sixty. So Rump asks for the retention offer...'},
+    {...narration.cues[8],at:28,until:30,line:"and that's thirty dollars a month, saved."},
+    ...narration.cues.slice(9,14).map((cue,i)=>({...cue,at:[30,36,43,50,57][i],until:[36,43,50,57,60][i],line:script[i+8].line})),
+  ],
+};
+
+export const screenUpdates = {
+  flight: {
+    title: "A delay shouldn't cost you twice.", subtitle: 'The evidence, the rule, and your next step. All in one place.',
+    tab: 'Compensation claims', source: 'Source: Gmail', flight: 'AC 857', date: 'September 18, 2026', delay: '7h 12m delay', route: 'Toronto → London',
+    rules: ['Large carrier', 'Within carrier control', '6 to 9 hours late', 'Not required for safety'],
+    assumption: 'Demo assumes a qualifying delay.', request: 'Compensation request', to: 'To: Air Canada Customer Relations',
+    gathering: 'Gathering your flight details', awaiting: 'Awaiting draft', drafting: 'Drafting…', eligible: 'Eligible compensation',
+    approval: 'You approve. Rump sends.', audit: 'ClaimsAgent · APPR rule matched', end: 'A draft is ready for your review. Nothing has been sent.', caretEvery: 15,
+  },
+  sourceIcons: ['ramp.png','scotiabank.png','wealthsimple.png','rogers.png','gmail.svg','imessage.png','slack.png','instagram.png','notion.png'],
+  solution: [
+    {title:'Connect your money.',body:'Cards, banks, bills, and inbox. One clear picture.'},
+    {title:'Find the leaks.',body:'Spot unused plans, hidden fees, and money owed.'},
+    {title:'Approve. Keep more.',body:'Rump negotiates, downgrades, and drafts claims.'},
+  ],
 };

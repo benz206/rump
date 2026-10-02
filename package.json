@@ -12,6 +12,8 @@
     "verify:browser": "node scripts/verify-browser.mjs",
     "check:content": "bun scripts/check-content.ts",
     "render:pitch": "remotion render RumpPitch out/rump-pitch.mp4",
+    "render:60": "remotion render Rump60 out/rump-60.mp4",
+    "audio:60": "bun scripts/align-short-narration.ts",
     "render:demo": "remotion render RumpDemo out/rump-demo.mp4",
     "render:draft": "remotion render RumpPitch out/rump-draft.mp4 --scale=0.5 --crf=28",
     "render:slides": "bun scripts/render-slides.ts",

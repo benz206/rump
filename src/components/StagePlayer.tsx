@@ -4,7 +4,7 @@ import { Player, type PlayerRef } from '@remotion/player';
 import { RumpPitch } from '@/remotion/compositions/RumpPitch';
 import { Segment } from '@/remotion/compositions/Segment';
 import { beatFrames, getSegment, lineAtFrame, sec, segmentAtFrame, segments } from '@/lib/timeline';
-import { pitch, script, timing, video } from '@/config/content';
+import { narration, pitch, script, timing, video } from '@/config/content';
 export default function StagePlayer({studio=false}:{studio?:boolean}) {
  const [query]=useState(()=>new URLSearchParams(window.location.search));
  const initial=getSegment(query.get('from')??'slide-problem');
@@ -13,6 +13,7 @@ export default function StagePlayer({studio=false}:{studio?:boolean}) {
  const [hood,setHood]=useState(query.get('hood')==='1');
  const [captions,setCaptions]=useState(query.get('captions')==='1');
  const [presenter,setPresenter]=useState(false);
+ const [narrating,setNarrating]=useState(false);
  const [elapsed,setElapsed]=useState(0);
  const ref=useRef<PlayerRef>(null);
  const autoplay=useRef(query.get('autoplay')==='1');
@@ -50,6 +51,7 @@ export default function StagePlayer({studio=false}:{studio?:boolean}) {
  const current=lineAtFrame(frame);const next=script.find(line=>line.at>frame/video.fps);
  const selected=segmentAtFrame(frame);
  return <div style={{height:'100vh',background:'var(--ink)',color:'var(--surface)',display:'flex',flexDirection:'column',overflow:'hidden'}}>
+ {!library&&!narrating&&<button data-demo-action="play-narration" onClick={()=>{const player=ref.current;if(!player)return;target.current=null;autoplay.current=true;player.seekTo(initial.from);player.unmute();player.play();setNarrating(true);}} style={{position:'fixed',right:20,top:20,zIndex:100,border:0,borderRadius:8,padding:'12px 18px',background:'var(--accent)',color:'var(--ink)',fontWeight:600,cursor:'pointer'}}>{narration.play}</button>}
  {studio&&<header style={{padding:'16px 24px',display:'flex',justifyContent:'space-between',fontSize:14}}><strong>{pitch.labels.player}</strong><span data-testid="frame">{pitch.labels.frame} {frame} / {sec(video.seconds)}</span></header>}
  <div style={{flex:1,minHeight:0,display:'flex',alignItems:'center',justifyContent:'center'}}>
  <Player initiallyMuted acknowledgeRemotionLicense ref={ref} component={library?Segment:RumpPitch} inputProps={{showHood:hood,showCaptions:captions,showCursor:true,...(library?{segmentId:'step-library'}:{})}} durationInFrames={library?initial.duration:sec(video.seconds)} compositionWidth={video.width} compositionHeight={video.height} fps={video.fps} initialFrame={initial.from} autoPlay={query.get('autoplay')==='1'} controls={studio} clickToPlay={false} spaceKeyToPlayOrPause={false} moveToBeginningWhenEnded={false} style={{width:'100%',maxHeight:'100%',aspectRatio:`${video.width}/${video.height}`}}/>
